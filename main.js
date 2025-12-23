@@ -1,5 +1,5 @@
 // --- KONFIGURASI ---
-const pdfUrl = 'WARTA JEMAAT GKI GMM EDISI 13 Tahun ke-22 (14-12-2025).pdf'; // Pastikan nama file ini sesuai
+const pdfUrl = 'WARTA JEMAAT GKI GMM EDISI 14 Tahun ke-22 (21-12-2025).pdf'; // Pastikan nama file ini sesuai
 const bookElement = document.getElementById('book');
 const docNameElement = document.getElementById('docName');
 
