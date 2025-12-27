@@ -13,17 +13,18 @@ function initFlipbook() {
     if (pageFlip) pageFlip.destroy();
 
     pageFlip = new St.PageFlip(document.getElementById('book'), {
-        width: 595,
-        height: 842,
-        size: "stretch",
-        showCover: true, // Efek sampul buku
-        mode: isMobile ? "portrait" : "double",
-        clickEventForward: false, // Matikan klik otomatis agar tidak bentrok dengan tombol samping
-        useMouseEvents: true,
-        swipeDistance: 30,
-        maxShadowOpacity: 0.5,
-        showPageCorners: true
-    });
+    width: 595,
+    height: 842,
+    size: "stretch",
+    showCover: true, 
+    drawShadow: true,
+    flippingTime: 800,
+    startPage: 0,
+    mode: isMobile ? "portrait" : "double",
+    clickEventForward: false,
+    useMouseEvents: true,
+    showPageCorners: false // Matikan ini agar navigasi samping lebih dominan
+});
 
     const pages = document.querySelectorAll('.my-page');
     if (pages.length > 0) {
@@ -44,14 +45,16 @@ async function loadPdf() {
         bookElement.innerHTML = ''; 
 
         for (let i = 1; i <= pdf.numPages; i++) {
-            const page = await pdf.getPage(i);
-            const div = document.createElement('div');
-            div.className = 'my-page';
-            
-            // PERBAIKAN EFEK: Halaman 1 & 2 (sampul depan) dan terakhir (sampul belakang) dibuat keras
-            if (i === 1 || i === pdf.numPages) {
-                div.dataset.density = 'hard';
-            }
+        const page = await pdf.getPage(i);
+        const div = document.createElement('div');
+        div.className = 'my-page';
+        
+        // Sampul Depan (Halaman 1) dan Sampul Belakang (Halaman Terakhir)
+        if (i === 1 || i === pdf.numPages) {
+            div.dataset.density = 'hard';
+        } else {
+            div.dataset.density = 'soft';
+        }
 
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
