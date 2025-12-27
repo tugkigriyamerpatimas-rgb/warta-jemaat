@@ -1,97 +1,81 @@
-// --- KONFIGURASI ---
 const pdfUrl = 'WARTA JEMAAT GKI GMM EDISI 14 Tahun ke-22 (21-12-2025).pdf';
-// Gunakan let atau pastikan hanya dideklarasikan satu kali di paling atas
-let pageFlipInstance = null;
-const elBook = document.getElementById('book');
-const elPageInfo = document.getElementById('pageInfo');
-const elDocLink = document.getElementById('docName');
+let flipBook = null;
 
-// Set link download
-if (elDocLink) {
-    elDocLink.innerText = "📥 Download PDF";
-    elDocLink.href = pdfUrl;
-}
+async function loadAndRenderPdf() {
+    const bookEl = document.getElementById('book');
+    bookEl.innerHTML = '<div style="color:white">Memuat...</div>';
 
-function initFlipbook() {
-    const isMobile = window.innerWidth < 768;
-    
-    // Hancurkan instance lama jika ada sebelum membuat yang baru
-    if (pageFlipInstance) {
-        pageFlipInstance.destroy();
-    }
-
-    pageFlipInstance = new St.PageFlip(elBook, {
-        width: 595,
-        height: 842,
-        size: "stretch",
-        showCover: true, 
-        mode: isMobile ? "portrait" : "double",
-        clickEventForward: false,
-        useMouseEvents: true,
-        swipeDistance: 30,
-        showPageCorners: false,
-        maxShadowOpacity: 0.5
-    });
-
-    const pages = document.querySelectorAll('.my-page');
-    if (pages.length > 0) {
-        pageFlipInstance.loadFromHTML(pages);
-    }
-
-    // Update Nomor Halaman
-    pageFlipInstance.on('flip', (e) => {
-        elPageInfo.innerText = e.data + 1;
-    });
-}
-
-async function loadPdf() {
     try {
-        elBook.innerHTML = `<div style="color:white;text-align:center;padding:20px;">Menyiapkan Warta...</div>`;
-        
         const loadingTask = pdfjsLib.getDocument(pdfUrl);
         const pdf = await loadingTask.promise;
+        const totalPages = pdf.numPages;
+        document.getElementById('pageTotal').innerText = totalPages;
+
+        bookEl.innerHTML = '';
         const fragment = document.createDocumentFragment();
 
-        for (let i = 1; i <= pdf.numPages; i++) {
+        for (let i = 1; i <= totalPages; i++) {
             const page = await pdf.getPage(i);
+            const viewport = page.getViewport({ scale: 2 }); // Scale tinggi agar tajam
+
             const div = document.createElement('div');
             div.className = 'my-page';
             
-            // Efek sampul kaku untuk halaman pertama dan terakhir
-            div.dataset.density = (i === 1 || i === pdf.numPages) ? 'hard' : 'soft';
+            // Logika Hard Cover: Hanya halaman 1 dan Terakhir
+            div.dataset.density = (i === 1 || i === totalPages) ? 'hard' : 'soft';
 
             const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            const viewport = page.getViewport({ scale: 1.5 });
-            
             canvas.width = viewport.width;
             canvas.height = viewport.height;
-
+            
+            const context = canvas.getContext('2d');
             await page.render({ canvasContext: context, viewport: viewport }).promise;
+
             div.appendChild(canvas);
             fragment.appendChild(div);
         }
 
-        elBook.innerHTML = ''; 
-        elBook.appendChild(fragment);
+        bookEl.appendChild(fragment);
+        initFlipBook();
 
-        // Tunggu sebentar agar browser merender canvas sebelum Flipbook dihitung
-        setTimeout(initFlipbook, 200);
-
-    } catch (error) {
-        elBook.innerHTML = `<p style="color:white;padding:20px;">Gagal: ${error.message}</p>`;
+    } catch (e) {
+        bookEl.innerHTML = `<div style="color:white">Error: ${e.message}</div>`;
     }
 }
 
-// Navigasi Samping
-document.querySelector('.nav-left').onclick = () => pageFlipInstance && pageFlipInstance.flipPrev();
-document.querySelector('.nav-right').onclick = () => pageFlipInstance && pageFlipInstance.flipNext();
+function initFlipBook() {
+    const isMobile = window.innerWidth < 768;
 
-// Deteksi perubahan ukuran layar (Resize)
-let resizeTimer;
+    if (flipBook) flipBook.destroy();
+
+    flipBook = new St.PageFlip(document.getElementById('book'), {
+        width: 595,
+        height: 842,
+        size: "stretch",
+        minWidth: 315,
+        maxWidth: 1000,
+        minHeight: 420,
+        maxHeight: 1350,
+        showCover: true, // WAJIB untuk buka-tutup rapi
+        mode: isMobile ? "portrait" : "double",
+        clickEventForward: false,
+        useMouseEvents: true,
+        maxShadowOpacity: 0.5,
+    });
+
+    flipBook.loadFromHTML(document.querySelectorAll('.my-page'));
+
+    flipBook.on('flip', (e) => {
+        document.getElementById('pageInfo').innerText = e.data + 1;
+    });
+}
+
+// Event Listeners
+document.getElementById('prevBtn').onclick = () => flipBook.flipPrev();
+document.getElementById('nextBtn').onclick = () => flipBook.flipNext();
+
 window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(initFlipbook, 300);
+    setTimeout(initFlipBook, 200);
 });
 
-loadPdf();
+loadAndRenderPdf();
