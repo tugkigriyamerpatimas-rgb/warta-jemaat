@@ -2,136 +2,222 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Warta Jemaat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Warta Jemaat GKI GMM</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Reset dasar */
+        /* RESET & BASE */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            font-family: 'Noto Sans', sans-serif;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            color: white;
+            overflow-x: hidden;
             padding: 20px;
         }
-        
-        .app-container {
-            width: 100%;
+
+        /* HEADER */
+        .header {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            color: white;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* MAIN CONTAINER */
+        .container {
             max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 20px;
         }
-        
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 10px;
-        }
-        
-        .header h1 {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-        
-        .header p {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-        
-        .flipbook-container {
-            position: relative;
+
+        /* PDF VIEWER */
+        .pdf-viewer {
             width: 100%;
-            height: 70vh;
+            height: 75vh;
+            min-height: 500px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-            padding: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
         }
-        
+
         #book {
             width: 100%;
             height: 100%;
             position: relative;
         }
-        
-        .navigation {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            justify-content: center;
-            margin-top: 10px;
-        }
-        
-        .nav-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+
+        .page {
             background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 5px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .page canvas {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* NAVIGATION */
+        .nav-buttons {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
             border: none;
-            font-size: 24px;
+            font-size: 28px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            color: #2c3e50;
             transition: all 0.3s ease;
-            color: #333;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
         }
-        
-        .nav-btn:hover {
+
+        .nav-btn:hover:not(:disabled) {
             transform: scale(1.1);
-            background: #f0f0f0;
+            background: white;
         }
-        
-        .nav-btn:active {
+
+        .nav-btn:active:not(:disabled) {
             transform: scale(0.95);
         }
-        
-        .page-counter {
-            background: white;
-            padding: 8px 20px;
-            border-radius: 25px;
-            font-weight: bold;
-            color: #333;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            min-width: 100px;
-            text-align: center;
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
-        
+
+        .page-counter {
+            background: rgba(255, 255, 255, 0.9);
+            color: #2c3e50;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            min-width: 120px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* LOADING & ERROR STATES */
         .loading {
             color: white;
-            font-size: 18px;
             text-align: center;
-            padding: 20px;
-        }
-        
-        .error {
-            color: #ff6b6b;
-            font-size: 16px;
-            text-align: center;
-            padding: 20px;
+            padding: 30px;
+            font-size: 1.2rem;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
+            backdrop-filter: blur(5px);
         }
-        
-        /* Responsive */
+
+        .error {
+            color: #ff6b6b;
+            text-align: center;
+            padding: 30px;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* RESPONSIVE */
         @media (max-width: 768px) {
-            .flipbook-container {
+            .pdf-viewer {
                 height: 60vh;
+                min-height: 400px;
                 padding: 10px;
+            }
+            
+            .nav-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+            }
+            
+            .page-counter {
+                padding: 10px 20px;
+                font-size: 1rem;
+                min-width: 100px;
+            }
+            
+            .nav-buttons {
+                gap: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            body {
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .pdf-viewer {
+                height: 50vh;
+                min-height: 350px;
             }
             
             .nav-btn {
@@ -140,46 +226,39 @@
                 font-size: 20px;
             }
             
-            .header h1 {
-                font-size: 20px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .flipbook-container {
-                height: 50vh;
+            .page-counter {
+                font-size: 0.9rem;
+                min-width: 90px;
             }
             
-            .nav-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 18px;
-            }
-            
-            .navigation {
+            .nav-buttons {
                 gap: 15px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <div class="header">
-            <h1>Warta Jemaat GKI GMM</h1>
-            <p>Edisi 14 Tahun ke-22 (21-12-2025)</p>
-        </div>
-        
-        <div class="flipbook-container">
+    <div class="header">
+        <h1>Warta Jemaat GKI GMM</h1>
+        <p>Edisi 14 Tahun ke-22 (21-12-2025)</p>
+    </div>
+
+    <div class="container">
+        <div class="pdf-viewer">
             <div id="book"></div>
         </div>
-        
-        <div class="navigation">
-            <button class="nav-btn" id="prevBtn">‹</button>
+
+        <div class="nav-buttons">
+            <button class="nav-btn" id="prevBtn" disabled>‹</button>
             <div class="page-counter">
                 <span id="pageInfo">1</span> / <span id="pageTotal">--</span>
             </div>
-            <button class="nav-btn" id="nextBtn">›</button>
+            <button class="nav-btn" id="nextBtn" disabled>›</button>
         </div>
+    </div>
+
+    <div class="footer">
+        Gunakan tombol atau geser halaman untuk navigasi
     </div>
 
     <!-- PDF.js Library -->
@@ -189,207 +268,295 @@
     </script>
     
     <!-- PageFlip Library -->
-    <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.3/dist/js/page-flip.browser.min.js"></script>
     
-    <!-- Aplikasi JavaScript -->
     <script>
-        // Tunggu library siap
-        document.addEventListener('DOMContentLoaded', function() {
-            // Tunggu PageFlip library ready
-            const checkLibrary = setInterval(function() {
-                if (typeof St !== 'undefined' && St.PageFlip) {
-                    clearInterval(checkLibrary);
-                    initApp();
-                }
-            }, 100);
+        // VARIABLES
+        const PDF_PATH = 'WARTA JEMAAT GKI GMM EDISI 14 Tahun ke-22 (21-12-2025).pdf';
+        let flipbook = null;
+        let pdfDoc = null;
+        let currentPageIndex = 0;
+        let totalPages = 0;
+        let isInitialized = false;
+        
+        // ELEMENTS
+        const bookElement = document.getElementById('book');
+        const pageInfoElement = document.getElementById('pageInfo');
+        const pageTotalElement = document.getElementById('pageTotal');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        
+        // INITIALIZE APP
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Show loading state
+            bookElement.innerHTML = '<div class="loading">Memuat aplikasi...</div>';
             
-            // Timeout fallback
-            setTimeout(function() {
-                clearInterval(checkLibrary);
-                if (typeof St === 'undefined') {
-                    document.getElementById('book').innerHTML = 
-                        '<div class="error">Error: PageFlip library gagal dimuat. Refresh halaman.</div>';
-                }
-            }, 5000);
-        });
-
-        async function initApp() {
-            const PDF_PATH = 'WARTA JEMAAT GKI GMM EDISI 14 Tahun ke-22 (21-12-2025).pdf';
-            let flipbook = null;
-            let pdfDoc = null;
-            let currentPage = 0;
+            // Check if libraries are loaded
+            if (typeof pdfjsLib === 'undefined') {
+                showError('PDF.js library tidak dimuat. Periksa koneksi internet.');
+                return;
+            }
             
-            const bookElement = document.getElementById('book');
-            const pageInfo = document.getElementById('pageInfo');
-            const pageTotal = document.getElementById('pageTotal');
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            
-            // Tampilkan loading
-            bookElement.innerHTML = '<div class="loading">Memuat PDF...</div>';
+            if (typeof St === 'undefined') {
+                showError('PageFlip library tidak dimuat. Periksa koneksi internet.');
+                return;
+            }
             
             try {
-                // Load PDF
+                await loadPDF();
+            } catch (error) {
+                showError(`Gagal memuat PDF: ${error.message}`);
+            }
+        });
+        
+        // LOAD PDF DOCUMENT
+        async function loadPDF() {
+            try {
+                bookElement.innerHTML = '<div class="loading">Memuat PDF...</div>';
+                
+                // Load PDF document
                 pdfDoc = await pdfjsLib.getDocument(PDF_PATH).promise;
-                const totalPages = pdfDoc.numPages;
-                pageTotal.textContent = totalPages;
+                totalPages = pdfDoc.numPages;
+                pageTotalElement.textContent = totalPages;
                 
-                // Render semua halaman
-                bookElement.innerHTML = '';
+                // Render first few pages
+                await renderInitialPages();
                 
-                for (let i = 1; i <= totalPages; i++) {
-                    const page = await pdfDoc.getPage(i);
-                    
-                    // Buat kontainer halaman
-                    const pageDiv = document.createElement('div');
-                    pageDiv.className = 'page';
-                    
-                    // Tentukan density untuk cover
-                    if (i === 1 || i === totalPages) {
-                        pageDiv.setAttribute('data-density', 'hard');
-                    }
-                    
-                    // Buat canvas
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-                    
-                    // Atur ukuran
-                    const viewport = page.getViewport({ scale: 1.2 });
-                    canvas.width = viewport.width;
-                    canvas.height = viewport.height;
-                    
-                    // Render halaman ke canvas
-                    await page.render({
-                        canvasContext: context,
-                        viewport: viewport
-                    }).promise;
-                    
-                    // Tambahkan canvas ke div
-                    pageDiv.appendChild(canvas);
-                    bookElement.appendChild(pageDiv);
-                    
-                    // Update progress
-                    if (i % 5 === 0 || i === totalPages) {
-                        bookElement.innerHTML += `<div class="loading">Memuat halaman ${i}/${totalPages}...</div>`;
-                    }
-                }
+                // Initialize flipbook
+                initializeFlipbook();
                 
-                // Setup flipbook setelah semua halaman dirender
-                setupFlipbook();
+                // Update button states
+                updateNavigationButtons();
                 
             } catch (error) {
-                console.error('Error:', error);
-                bookElement.innerHTML = `
-                    <div class="error">
-                        <p>Gagal memuat PDF.</p>
-                        <p>Pastikan file PDF tersedia di lokasi yang benar.</p>
-                        <p><small>${error.message}</small></p>
-                    </div>
-                `;
-            }
-            
-            function setupFlipbook() {
-                // Hapus loading elements terakhir
-                const loadingElements = bookElement.querySelectorAll('.loading');
-                loadingElements.forEach(el => el.remove());
-                
-                // Setup PageFlip
-                const container = document.querySelector('.flipbook-container');
-                const width = container.clientWidth * 0.9;
-                const height = container.clientHeight * 0.9;
-                
-                // Mode berdasarkan ukuran layar
-                const isMobile = window.innerWidth < 768;
-                
-                flipbook = new St.PageFlip(bookElement, {
-                    width: Math.min(width, 800),
-                    height: Math.min(height, 600),
-                    size: 'fixed',
-                    showCover: true,
-                    mobileScrollSupport: true,
-                    clickEventForward: true,
-                    useMouseEvents: true,
-                    swipeDistance: isMobile ? 30 : 50,
-                    showPageCorners: !isMobile,
-                    maxShadowOpacity: 0.2,
-                    startPage: currentPage,
-                    mode: isMobile ? "portrait" : "double",
-                    minWidth: 280,
-                    minHeight: 400,
-                    maxWidth: 1000,
-                    maxHeight: 700
-                });
-                
-                // Load halaman dari HTML
-                const pages = bookElement.querySelectorAll('.page');
-                flipbook.loadFromHTML(pages);
-                
-                // Event listeners
-                flipbook.on('flip', function(e) {
-                    currentPage = e.data;
-                    pageInfo.textContent = currentPage + 1;
-                });
-                
-                // Navigasi tombol
-                prevBtn.addEventListener('click', function() {
-                    flipbook.flipPrev();
-                });
-                
-                nextBtn.addEventListener('click', function() {
-                    flipbook.flipNext();
-                });
-                
-                // Navigasi keyboard
-                document.addEventListener('keydown', function(e) {
-                    if (e.key === 'ArrowLeft') {
-                        flipbook.flipPrev();
-                    } else if (e.key === 'ArrowRight') {
-                        flipbook.flipNext();
-                    }
-                });
-                
-                // Handle resize
-                let resizeTimer;
-                window.addEventListener('resize', function() {
-                    clearTimeout(resizeTimer);
-                    resizeTimer = setTimeout(function() {
-                        if (flipbook) {
-                            const container = document.querySelector('.flipbook-container');
-                            const width = container.clientWidth * 0.9;
-                            const height = container.clientHeight * 0.9;
-                            
-                            const isMobile = window.innerWidth < 768;
-                            
-                            flipbook.updateOptions({
-                                width: Math.min(width, 800),
-                                height: Math.min(height, 600),
-                                mode: isMobile ? "portrait" : "double"
-                            });
-                        }
-                    }, 250);
-                });
-                
-                // Handle touch untuk mobile swipe
-                let touchStartX = 0;
-                
-                bookElement.addEventListener('touchstart', function(e) {
-                    touchStartX = e.touches[0].clientX;
-                }, { passive: true });
-                
-                bookElement.addEventListener('touchend', function(e) {
-                    const touchEndX = e.changedTouches[0].clientX;
-                    const diff = touchStartX - touchEndX;
-                    
-                    if (Math.abs(diff) > 50) {
-                        if (diff > 0) {
-                            flipbook.flipNext(); // Swipe kiri
-                        } else {
-                            flipbook.flipPrev(); // Swipe kanan
-                        }
-                    }
-                }, { passive: true });
+                console.error('Error loading PDF:', error);
+                throw error;
             }
         }
+        
+        // RENDER INITIAL PAGES (first 3 pages for faster loading)
+        async function renderInitialPages() {
+            bookElement.innerHTML = '';
+            
+            // Render first 3 pages
+            const pagesToRender = Math.min(3, totalPages);
+            
+            for (let i = 1; i <= pagesToRender; i++) {
+                await renderPage(i);
+            }
+            
+            // Render remaining pages in background
+            if (totalPages > pagesToRender) {
+                setTimeout(() => renderRemainingPages(pagesToRender + 1), 1000);
+            }
+        }
+        
+        // RENDER A SINGLE PAGE
+        async function renderPage(pageNumber) {
+            try {
+                const page = await pdfDoc.getPage(pageNumber);
+                
+                // Create page container
+                const pageDiv = document.createElement('div');
+                pageDiv.className = 'page';
+                pageDiv.dataset.page = pageNumber;
+                
+                // Set density for covers
+                if (pageNumber === 1 || pageNumber === totalPages) {
+                    pageDiv.dataset.density = 'hard';
+                }
+                
+                // Create canvas
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                
+                // Calculate scale to fit container
+                const containerWidth = bookElement.clientWidth;
+                const containerHeight = bookElement.clientHeight;
+                const pageViewport = page.getViewport({ scale: 1 });
+                
+                let scale = 1;
+                if (containerWidth > 0 && containerHeight > 0) {
+                    const scaleX = containerWidth / pageViewport.width;
+                    const scaleY = containerHeight / pageViewport.height;
+                    scale = Math.min(scaleX, scaleY) * 0.9; // 90% of container size
+                }
+                
+                // Apply scale
+                const viewport = page.getViewport({ scale: scale });
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+                
+                // Render page
+                await page.render({
+                    canvasContext: context,
+                    viewport: viewport
+                }).promise;
+                
+                // Add to DOM
+                pageDiv.appendChild(canvas);
+                bookElement.appendChild(pageDiv);
+                
+            } catch (error) {
+                console.error(`Error rendering page ${pageNumber}:`, error);
+            }
+        }
+        
+        // RENDER REMAINING PAGES IN BACKGROUND
+        async function renderRemainingPages(startFrom) {
+            for (let i = startFrom; i <= totalPages; i++) {
+                await renderPage(i);
+                
+                // Add pages to flipbook if it's already initialized
+                if (flipbook && isInitialized) {
+                    const newPage = document.querySelector(`[data-page="${i}"]`);
+                    if (newPage) {
+                        // PageFlip doesn't have a method to add pages dynamically,
+                        // so we need to reinitialize or handle differently
+                        // For now, just continue
+                    }
+                }
+            }
+        }
+        
+        // INITIALIZE PAGE FLIP
+        function initializeFlipbook() {
+            if (flipbook) {
+                flipbook.destroy();
+            }
+            
+            // Get container dimensions
+            const container = document.querySelector('.pdf-viewer');
+            const width = container.clientWidth * 0.9;
+            const height = container.clientHeight * 0.9;
+            const isMobile = window.innerWidth < 768;
+            
+            // Initialize flipbook
+            flipbook = new St.PageFlip(bookElement, {
+                width: Math.min(width, 800),
+                height: Math.min(height, 600),
+                size: 'fixed',
+                showCover: true,
+                mobileScrollSupport: true,
+                clickEventForward: true,
+                useMouseEvents: true,
+                swipeDistance: isMobile ? 30 : 50,
+                showPageCorners: !isMobile,
+                maxShadowOpacity: 0.2,
+                startPage: currentPageIndex,
+                mode: isMobile ? "portrait" : "double",
+                minWidth: 280,
+                minHeight: 400,
+                maxWidth: 1000,
+                maxHeight: 700
+            });
+            
+            // Load pages from DOM
+            const pages = document.querySelectorAll('.page');
+            flipbook.loadFromHTML(pages);
+            
+            // Event listeners
+            flipbook.on('flip', (e) => {
+                currentPageIndex = e.data;
+                pageInfoElement.textContent = currentPageIndex + 1;
+                updateNavigationButtons();
+            });
+            
+            flipbook.on('changeState', (e) => {
+                // Optional: handle state changes
+            });
+            
+            isInitialized = true;
+        }
+        
+        // UPDATE NAVIGATION BUTTONS
+        function updateNavigationButtons() {
+            prevBtn.disabled = currentPageIndex === 0;
+            nextBtn.disabled = currentPageIndex === totalPages - 1;
+        }
+        
+        // NAVIGATION FUNCTIONS
+        prevBtn.addEventListener('click', () => {
+            if (flipbook && !prevBtn.disabled) {
+                flipbook.flipPrev();
+            }
+        });
+        
+        nextBtn.addEventListener('click', () => {
+            if (flipbook && !nextBtn.disabled) {
+                flipbook.flipNext();
+            }
+        });
+        
+        // KEYBOARD NAVIGATION
+        document.addEventListener('keydown', (e) => {
+            if (!flipbook) return;
+            
+            if (e.key === 'ArrowLeft' && !prevBtn.disabled) {
+                flipbook.flipPrev();
+            } else if (e.key === 'ArrowRight' && !nextBtn.disabled) {
+                flipbook.flipNext();
+            }
+        });
+        
+        // TOUCH SWIPE FOR MOBILE
+        let touchStartX = 0;
+        let touchStartY = 0;
+        
+        bookElement.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+        
+        bookElement.addEventListener('touchend', (e) => {
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            
+            const diffX = touchStartX - touchEndX;
+            const diffY = touchStartY - touchEndY;
+            
+            // Only handle horizontal swipes (ignore vertical scrolls)
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                if (diffX > 0 && !nextBtn.disabled) {
+                    flipbook.flipNext(); // Swipe left
+                } else if (diffX < 0 && !prevBtn.disabled) {
+                    flipbook.flipPrev(); // Swipe right
+                }
+            }
+        }, { passive: true });
+        
+        // RESIZE HANDLER (FIXED - No updateOptions)
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                if (flipbook && isInitialized) {
+                    // Destroy and recreate flipbook on resize
+                    const lastPage = currentPageIndex;
+                    initializeFlipbook();
+                    if (flipbook && lastPage > 0) {
+                        // Try to go back to last page
+                        flipbook.flip(lastPage);
+                    }
+                }
+            }, 300);
+        });
+        
+        // ERROR HANDLING
+        function showError(message) {
+            bookElement.innerHTML = `<div class="error">${message}</div>`;
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+        }
+        
+        // Enable buttons once PDF is loaded
+        function enableButtons() {
+            prevBtn.disabled = false;
+            nextBtn.disabled = false;
+        }
+        
+        // Initial button state
+        updateNavigationButtons();
     </script>
 </body>
 </html>
