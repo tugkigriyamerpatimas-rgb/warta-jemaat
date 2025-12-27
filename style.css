@@ -8,136 +8,105 @@ body {
     font-family: 'Roboto', sans-serif;
     background-color: #2c3e50;
     color: white;
-    overflow: hidden; /* Mencegah scrollbar ganda di Google Sites */
+    overflow: hidden; 
     width: 100vw;
     height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .container {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
     width: 100%;
     height: 100%;
-    padding: 10px 0; /* Padding vertikal sedikit */
+    position: relative;
 }
 
-/* JUDUL */
-.mini-title {
-    font-size: 1.2rem;
-    font-weight: 700;
+/* Link Download di Atas */
+.file-name {
+    align-self: center;
+    font-size: 0.8rem;
     color: #ecf0f1;
-    margin: 5px 0;
-    text-align: center;
+    text-decoration: none;
+    padding: 8px 15px;
+    margin: 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+    z-index: 10;
 }
 
-/* AREA BUKU */
+/* AREA BUKU - Paling Penting */
 #book {
-    flex-grow: 1; /* Mengisi sisa ruang kosong */
-    width: 95%;   /* Default Desktop: tidak terlalu mepet */
-    height: auto;
+    flex: 1;
+    width: 90%;
+    margin: 0 auto;
     display: flex;
     justify-content: center;
     align-items: center;
+    /* Mencegah buku menabrak kontrol bawah */
+    margin-bottom: 70px; 
 }
 
-/* Styling Halaman PDF */
 .my-page {
     background-color: white;
-    overflow: hidden;
-    /* PENTING: Agar gambar tidak gepeng */
-    display: block; 
-    width: 100%;
-    height: 100%;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
 }
 
 canvas {
-    display: block;
     width: 100%;
     height: 100%;
-    /* PENTING: Object fit contain menjaga rasio asli PDF agar tidak terpotong */
-    object-fit: contain; 
+    object-fit: contain;
 }
 
-/* KONTROL DI BAWAH */
+/* KONTROL */
 .controls {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 20px;
-    padding: 10px;
-    width: 100%;
-    background: rgba(0,0,0,0.3); /* Latar belakang transparan */
-    backdrop-filter: blur(5px);
+    gap: 30px;
+    padding: 15px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    z-index: 100;
 }
 
 button {
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     background-color: #e74c3c;
     color: white;
     border: none;
     cursor: pointer;
-    font-size: 20px;
-    display: flex;     
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    font-size: 24px;
+    transition: transform 0.2s;
 }
 
-button:hover { background-color: #c0392b; }
-#pageInfo { font-size: 1.1rem; font-weight: bold; min-width: 40px; text-align: center; }
+button:active { transform: scale(0.9); }
 
-/* --- RESPONSIVE MOBILE (Layak Kecil) --- */
+#pageInfo { font-size: 1.2rem; font-weight: bold; }
+
+/* RESPONSIVE */
 @media screen and (max-width: 768px) {
-    .container {
-        padding: 0;
-        justify-content: flex-start; /* Di HP konten mulai dari atas */
-    }
-
-    .mini-title {
-        font-size: 1rem;
-        margin: 10px 0;
-    }
-
     #book {
-        width: 100%; /* Di HP, lebar buku 100% layar */
-        margin-top: 10px; 
-    }
-
-    .controls {
-        position: fixed; /* Kontrol menempel di bawah layar HP */
-        bottom: 0;
-        left: 0;
-        padding-bottom: 20px; /* Jarak aman untuk HP modern */
+        width: 95%;
+        margin-bottom: 80px;
     }
     
-    /* Tombol lebih kecil sedikit di HP agar tidak menutupi */
-    button {
-        width: 40px;
-        height: 40px;
-        font-size: 16px;
+    .file-name {
+        font-size: 0.7rem;
+        max-width: 80%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
-}
-/* Styling untuk Link Download */
-.file-name {
-    font-size: 0.9rem;
-    color: #bdc3c7;          /* Warna abu-abu terang */
-    margin-bottom: 10px;
-    text-decoration: none;   /* Hilangkan garis bawah standar */
-    display: inline-block;   /* Agar padding berfungsi */
-    padding: 5px 10px;
-    border: 1px solid rgba(255,255,255,0.2); /* Garis tipis */
-    border-radius: 15px;     /* Membuat sudut bulat */
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.file-name:hover {
-    background-color: #e74c3c; /* Latar merah saat disorot */
-    color: white;
-    border-color: #e74c3c;
-    box-shadow: 0 4px 10px rgba(231, 76, 60, 0.4);
+    
+    button {
+        width: 45px;
+        height: 45px;
+    }
 }
